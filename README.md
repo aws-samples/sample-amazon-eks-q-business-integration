@@ -37,10 +37,10 @@ This post provides Terraform code and walks you through the steps necessary to d
 
 To set up your workspace and get started with this post, open your favorite terminal in your Mac/Linux workstation,
 
-Then clone [terraform codes](https://github.com/aws-samples/amazon-eks-bottlerocket-mngnodegrp-terraform.git) in your current working directory 
+Then clone [terraform codes](https://github.com/aws-samples/sample-amazon-eks-q-business-integration.git) in your current working directory 
  
  ``` 
- git clone https://gitlab.aws.dev/imtranur/eks-amazon-q-business 
+ git clone https://github.com/aws-samples/sample-amazon-eks-q-business-integration.git
  ``` 
  
 Change your current working directory to “Amazon-Q-business” by running the below command 
@@ -50,7 +50,7 @@ cd "$_"
 cat provider.tf 
 ```
 
-![Picture3](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture3.png)
+![Picture3](https://github.com/aws-samples/sample-amazon-eks-q-business-integration/-/blob/main/images/Picture3.png)
 
 This directory has a file name “provider.tf” that contains information’s about the provider you’ll be using with Terraform. As shown above, along with “aws” provider we will also be using “[awscc](https://registry.terraform.io/providers/hashicorp/awscc/latest)” providers which is powered by the [AWS Cloud Control API](https://aws.amazon.com/cloudcontrolapi/), to create Amazon Q Business and its dependencies in this blog.
 
