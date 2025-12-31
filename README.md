@@ -30,8 +30,8 @@ This post provides Terraform code and walks you through the steps necessary to d
 
 4. If you haven’t enabled IAM Identity Center, choose Enable. If there’s a pop-up, choose how you want to enable IAM Identity Center. For this example, select Enable only in this AWS account. Choose Continue.
 
-![Picture2](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture2.png)
-
+#![Picture2](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture2.png)
+![Picture2](./images/Picture2.png)
 ## Steps
 
 ### Step 1: Create terraform backend remote state resources
