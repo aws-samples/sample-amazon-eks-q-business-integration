@@ -1,0 +1,40 @@
+---
+serviceAccount:
+   name: fluent-bit
+   create: fluent-bit
+   annotations: {
+      eks.amazonaws.com/role-arn: arn:aws:iam::570768930415:role/eks-amazonq-irsa-role,
+      app.kubernetes.io/managed-by: "Helm",
+      meta.helm.sh/release-name: "fluentbit"
+   }
+s3:
+    enabled: true
+    match: "*"
+    bucket: eks-amazonq-business-datastore-570768930415
+    region: "us-east-1"
+    jsonDateKey: "date"
+    jsonDateFormat: 
+    totalFileSize: "6M"
+    uploadChunkSize: "3M"
+    uploadTimeout: "2m"
+    storeDir: "/tmp/fluent-bit/s3"
+    storeDirLimitSize: 0
+    s3KeyFormat: /pod-logs/\$TAG/%Y-%m-%d/%H-%M-%S
+    s3KeyFormatTagDelimiters:
+    staticFilePath: false
+    usePutObject: true
+    roleArn:
+    endpoint:
+    stsEndpoint:
+    cannedAcl:
+    compression:
+    contentType:
+    sendContentMd5: false
+    autoRetryRequests: true
+    logKey:
+    preserveDataOrdering: true
+    storageClass:
+    retryLimit: 1
+    externalId:
+cloudWatchLogs:
+    enabled: false

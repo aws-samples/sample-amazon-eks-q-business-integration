@@ -1,0 +1,62 @@
+---
+### Simulation 1
+### Finding type: Policy:Kubernetes/AnonymousAccessGranted
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: anonymous-admin
+subjects:
+  - kind: User
+    name: system:anonymous
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: view
+  apiGroup: rbac.authorization.k8s.io
+---
+### Simulation 2 -AdminAccessToDefaultServiceAccount
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: default-service-acct-admin
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+###  Simulation 3 
+#### Finding type: PrivilegeEscalation:Kubernetes/PrivilegedContainer
+###  Finding type: Kubernetes/ContainerWithSensitiveMount Incident
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu-privileged-with-mount
+spec:
+  selector:
+    matchLabels:
+      app: ubuntu-privileged-with-mount
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ubuntu-privileged-with-mount
+    spec:
+      containers:
+      - name: ubuntu-privileged-with-mount
+        image: nginx
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /test-pd
+          name: test-volume
+      volumes:
+      - name: test-volume
+        hostPath:
+          path: /etc
+          type: Directory
