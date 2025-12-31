@@ -50,7 +50,7 @@ cd "$_"
 cat provider.tf 
 ```
 
-![Picture3](https://github.com/aws-samples/sample-amazon-eks-q-business-integration/-/blob/main/images/Picture3.png)
+![Picture3](./images/Picture3.png)
 
 This directory has a file name “provider.tf” that contains information’s about the provider you’ll be using with Terraform. As shown above, along with “aws” provider we will also be using “[awscc](https://registry.terraform.io/providers/hashicorp/awscc/latest)” providers which is powered by the [AWS Cloud Control API](https://aws.amazon.com/cloudcontrolapi/), to create Amazon Q Business and its dependencies in this blog.
 
@@ -102,7 +102,7 @@ make deploy
 ```
 This will take around 30 mins for terraform to deploy all the resources in us-east-1 region, if you would like to override the resources default name or value you can do so by updating “vars.tf” in the repo root directory. After the completion of the above make command command you should see output as seen in the following figure. In your case, the resources IDs could be different.
 
-![Picture4](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture4.png)
+![Picture4](./images/Picture4.png)
 
 ### Step 3: Deploy Sample Application and Fluent Bit to export container log to Amazon s3
 Next, we will be deploying our [retail store sample application](https://github.com/aws-containers/retail-store-sample-app) on top of our EKS cluster which we have created in last step. This is a sample application designed to illustrate various concepts related to containers on AWS. It presents a sample retail store application including a product catalog, shopping cart and checkout. To deploy the application run below command in your terminal from the repo base directory:
@@ -115,7 +115,7 @@ make deployapp
 After sample application, we will deploy [AWS for Fluent Bit](https://github.com/aws/aws-for-fluent-bit) as a Daemon Set in the “default” namespace and it will be configured to forward pod logs to an S3 Bucket. Use [Helm](https://helm.sh/) which is a package manager for Kubernetes, to deploy the [aws-for-fluent-bit](https://github.com/aws/aws-for-fluent-bit). To customize and configure fluent-bit while deploying, we will use “s3-fluentbit-values.yaml” YAML file located in the terraform repo base directory. 
 Replace the [irsa](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/setting-up-enable-IAM.html) serviceAccount role-arn, bucket name and region with values from your environment terraform created in  step 2 .You can also get those resources details by running “make  output”  command in your terminal. 
 
-![Picture5](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture5.png)
+![Picture5](./images/Picture5.png)
 
 After updating “s3-fluentbit-values.yaml” run:
 
@@ -123,7 +123,7 @@ After updating “s3-fluentbit-values.yaml” run:
 make fluentbit
 ```
 
-![Picture6](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture6.png)
+![Picture6](./images/Picture6.png)
 
 Verify that Fluent Bit is running with one pod on each of the cluster nodes by running below command
 
@@ -133,7 +133,7 @@ kubectl get daemonset
 
 The control plane and data plane logs being queried through Amazon Q Business are stored in a single S3 bucket named “[eks-amazonq-business-datastore-<AWS Account Id>](https://us-east-1.console.aws.amazon.com/s3/buckets/eks-amazonq-business-datastore-304279660828?region=us-east-1)” under different folders : “eks-cluster/” and “pod-logs/”. After the logging is enabled you, start seeing the logs appear in the configured S3 Bucket as shown below. If for don’t see them check fluent-bit deployment and Amazon Kinesis data Firehose and ensure these resources have been created. 
 
-![Picture7](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture7.png)
+![Picture7](./images/Picture7.png)
 
 ### Step 5: Create users and groups in AD and Sync with IAM Identity Center
 In this section, we will be creating users in [AWS Managed Microsoft AD](https://docs.aws.amazon.com/directoryservice/latest/admin-guide/directory_microsoft_ad.html) Active directory which we have created in Step 2. This will act as our centralized identity source for Amazon Q Business. Which We will integrate the AD with AWS IAM Identity Center in next step.
@@ -144,7 +144,7 @@ make users first_name last_name
 ```
 Please note that in this step you need to provide users first_name last_name otherwise users creation will fail. After the user’s creation their accounts would be disabled as shown in below image, for the user to able to work with Amazon Q we need to reset their password and enable them.
 
-![Picture8](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture8.png)
+![Picture8](./images/Picture8.png)
 
 To enable user and reset their password, Open [AWS Directory Service Console](https://us-east-1.console.aws.amazon.com/directoryservicev2/home?region=us-east-1#!/directories), select and open your Directory Service page. On this Page, at the bottom you will see the details of all the users in you AD along with their status.
 1.	Select the user you created earlier 
@@ -158,14 +158,14 @@ Open the [AWS IAM Identity Center](https://us-east-1.console.aws.amazon.com/sing
 
 Then, Go to Settings -> Identity source -> Action -> Change Identity Source -> Active Directory -> Next -> select “example.com” from existing directories -> Next -> ACCEPT “
 
-![Picture9](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture9.png)
+![Picture9](./images/Picture9.png)
 
 Once you change the AD in Identity center it will ask you to sync users, Click on “Start guided setup” at the top right in green color.
 1.	Click “Start guided setup” 
 2.	Configure attribute mappings – optional page- Keep everything default and click Next
 3.	Configure sync scope – optional – Under Users tab -> Search your user you created earlier -> Add -> Next -> Save configuration 
 
-![Picture10](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture10.png)
+![Picture10](./images/Picture10.png)
 
 4.	Wait for the sync to finish, this would usually take a couple of mins.
 
@@ -179,11 +179,11 @@ In this section, we are going to set up users and groups to showcase how access 
 2.	Click On “Get Started”  Select Amazon Q Business Application having name “eks_amazonq_app“ which we created using terraform in Step 2
 3.	On your application home page, click “Manage user access”-> Manage access and subscriptions page -> Add groups and users -> choose assign existing users and groups and choose Next -> Assign users and groups -> search your user -> Assign
 
-![Picture11](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture11.png)
+![Picture11](./images/Picture11.png)
 
 [Amazon Q Business supports Pro and Lite plan](https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/tiers.html#user-sub-tiers) in our blog we will select “pro” for both users in the access and subscription page. 
 
-![Picture12](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture12.png)
+![Picture12](./images/Picture12.png)
 
 ## Step 7: Sync S3 data source
 
@@ -194,7 +194,7 @@ make sync
 ```
 The sync can take from a few minutes to a few hours. If not completed already wait for the sync to complete. Verify the sync is complete and documents have been added.
 
-![Picture13](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture13.png)
+![Picture13](./images/Picture13.png)
 
 ## Step 8: Simulation and queries with Amazon Q
 
@@ -214,7 +214,7 @@ After successful login, let’s query logs and see if Amazon Q can find this by 
 
 “Has the anonymous user been granted API permission on a Kubernetes cluster? what is the risk associated with it and how to fix it?”  You should see output similar to this: 
 
-![Picture14](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture14.png)
+![Picture14](./images/Picture14.png)
 
 As you can see Amazon Q tells you the “systems:ananonymous“ user permission in the cluster and in second paragraph explains the risk associated with it with recommendations as well.
 
@@ -226,7 +226,7 @@ When asked a question like “Has the default service account been granted admin
 
 Amazon Q will provide a summary pulling information from Pods logs and Kubernetes system logs, highlighting the sources at the end of each excerpt.
 
-![Picture15](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture15.png)
+![Picture15](./images/Picture15.png)
 
 ### Simulation 3: 
 
@@ -236,13 +236,13 @@ When asked a question “List me all the pods that has spec "privileged: true" s
 
 Again, Amazon Q will provide a summary pulling information from Pods logs and Kubernetes system logs as shown below.
 
-![Picture16](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture16.png)
+![Picture16](./images/Picture16.png)
 
 Let’s try to add an extra query and ask Amazon Q to provide you the steps to fix them and see what response we are getting from Amazon Q Business?
 
 “List me all pods with privileged containers and sensitive host path mounts in the default namespace and outline me how to fix them?
 
-![Picture17](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture17.png)
+![Picture17](./images/Picture17.png)
 
 You can see along with it’s response from the logs Amazon Q Business LLM is also providing you the recommendation to fix the security issue which you can apply on the cluster. Along with the insights it’s also providing you the corrective steps.
 
@@ -257,7 +257,7 @@ Let’s query some control plane data by asking “Give me the UI deployments sp
 
 You can see from the output, Amazon Q Business from logs, regenerates the spec files for you. You can quickly glance through the specs and identify the errors.
 
-![Picture18](https://gitlab.aws.dev/imtranur/eks-amazon-q-business/-/blob/main/images/Picture18.png)
+![Picture18](./images/Picture18.png)
 
 Amazon Q respects the access control rules set up in the Amazon S3 data source as well. If you are interested in setting that up you can follow this [blog](https://aws.amazon.com/blogs/machine-learning/discover-insights-from-amazon-s3-with-amazon-q-s3-connector/).
 
